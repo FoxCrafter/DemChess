@@ -10,6 +10,9 @@ unsigned const N_PLAYERS = 2;
 
 unsigned const DIMENSIONS = 2;
 
+class ChessPiece : public Piece {
+    King *
+}
 class Pawn : public Piece {
 public:
     bool can_move_0(Square &) {

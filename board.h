@@ -4,9 +4,10 @@
 #include "square.h"
 
 class Board {
+    Square **squares;
     Piece **pieces;
 public:
-    Square *getSquare()
+    Square *getSquare();
     isAttacked(Piece &piece);
 };
 
