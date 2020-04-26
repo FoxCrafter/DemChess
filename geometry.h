@@ -12,8 +12,13 @@ public:
         for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
             this->coors[i] = coors[i];
     }
-    int operator[](unsigned i) const { return coor[i] }
-    int &operator[](unsigned i) { return coor[i] }
+    int operator[](unsigned i) const { return coor[i]; }
+    int &operator[](unsigned i) { return coor[i]; }
+    Coors operator+(RelCoors const &rc) const {
+        Coors res;
+        for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
+            res[i] = coors[i] + rc[i];
+    }
 };
 
 class RelCoors : public Coors {
@@ -22,7 +27,7 @@ public:
         for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
             coors[i] = to[i] - from[i];
     }
-    unsigned distance() {
+    unsigned distance() const {
         unsigned d = 0;
         for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
             d += coors[i] * coors[i];
@@ -31,16 +36,13 @@ public:
 }
 
 class Direction : public RelCoors {
+    void unitize();
 public:
-    Direction(Coors const &from, Coors const &to) : RelCoors(from, to) {
-        unsigned i = 0;
-        while(coors[i] == 0) {
-            ++i;
-            if(i >= Rules::DIMENSIONS)
-                throw "all zero direction";
-        };
-        unsigned gcd = coors[i] > 0 ? coors[i] : -coors[i];
-        
+    Direction(Coors const &from, Coors const &to) : RelCoors {
+        unitize();
+    }
+    Direction(RelCoors const coors) : RelCoors(coors) {
+        unitize();
     }
 };
 

@@ -6,17 +6,24 @@
 class Color {
     char data;
 public:
-
+    Color(char data) : data(data) {}
 };
 
 class Square {
     Coors const coors;
-    Color color;
+    Color const color;
 public:
     Square(Coors coors, Color color) : coors(coors), color(color) {}
     Coors const &getCoors() const { return coors; }
-    unsigned distance(Square const &) const;
-    int stepsAway(Square const &, Direction const &) const;
+    RelCoors relCoors(Square const &sq1) const {
+        return RelCoors(coors, sq1.coors);
+    }
+    Direction direction(Square const &sq1) const {
+        return Direction(coors, sq1.coors);
+    }
+    unsigned distance(Square const &sq1) const {
+        return relCoors(sq1).distance();
+    }
 };
 
 #endif
