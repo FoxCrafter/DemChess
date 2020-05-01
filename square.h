@@ -1,7 +1,7 @@
-#ifndef SQUARE_HPP
-#define SQUARE_HPP
+#ifndef SQUARE_H
+#define SQUARE_H
 
-#include "config.h"
+#include "geometry.h"
 
 class Color {
     char data;
@@ -14,15 +14,15 @@ class Square {
     Color const color;
 public:
     Square(Coors coors, Color color) : coors(coors), color(color) {}
-    Coors const &getCoors() const { return coors; }
-    RelCoors relCoors(Square const &sq1) const {
+    Coors const &get_coors() const { return coors; }
+    RelCoors rel_coors(Square const &sq1) const {
         return RelCoors(coors, sq1.coors);
     }
     Direction direction(Square const &sq1) const {
         return Direction(coors, sq1.coors);
     }
     unsigned distance(Square const &sq1) const {
-        return relCoors(sq1).distance();
+        return rel_coors(sq1).distance();
     }
 };
 
