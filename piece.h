@@ -23,7 +23,7 @@ public:
     virtual bool can_move_1(Square &target) { return can_move_0(target); }
     virtual void move() { /* TODO */ }
     bool has_moved() { return move_counter == 0; }
-    Square *&get_square() { return square; }
+    void set_square(Square *square) { this->square = square; }
     Square *get_square() const { return square; }
     Player &get_owner() { return owner; }
     Player const &get_owner() const { return owner; }
