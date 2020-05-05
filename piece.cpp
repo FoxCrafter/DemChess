@@ -11,3 +11,11 @@ bool LinearPiece::threatening(Square &target) {
     }
     return true;
 }
+
+void Piece::move() {
+    SquareGroup targets = board.get_target_squares(*this);
+    if(targets.count() == 0)
+        throw MoveException;
+    unsigned random = std::rand() % targets.count();
+    ++move_counter;
+}

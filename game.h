@@ -14,6 +14,7 @@ public:
     Game() {
         Rules::init(*this);
     }
+    virtual ~Game() { delete [] players; }
     friend void Rules::init(Game &);
 };
 

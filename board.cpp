@@ -37,6 +37,14 @@ bool Board::empty_between(Square &s1, Square &s2) {
     return true;
 }
 
+SquareGroup Board::get_target_squares(Piece &piece) {
+    SquareGroup target_squares;
+    for(unsigned i = 0; i < Rules::N_SQUARES; ++i)
+        if(piece.can_move_1(*squares[i]))
+            target_squares.add(squares[i]);
+    return target_squares;
+}
+
 Board::~Board() {
     for(unsigned i = 0; i < Rules::N_SQUARES; ++i)
         delete squares[i];

@@ -4,6 +4,13 @@
 #include "board.h"
 #include "player.h"
 
+#include <stdexcept>
+
+class MoveException : public std::exception {
+public:
+    MoveException() : std::exception("No legal move.\n") {}
+};
+
 class Piece {
 protected:
     Player &owner;
@@ -21,7 +28,11 @@ public:
         return can_take(board.get_piece(target)) && threatening(target);
     }
     virtual bool can_move_1(Square &target) { return can_move_0(target); }
-    virtual void move() { /* TODO */ }
+    virtual void move();
+    virtual void onOwnersMove() {}
+    virtual void onFriendlyMove() {}
+    virtual void onEnemyMove() {}
+    virtual void onPurge() {}
     bool has_moved() { return move_counter == 0; }
     void set_square(Square *square) { this->square = square; }
     Square *get_square() const { return square; }
