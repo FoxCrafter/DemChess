@@ -70,7 +70,18 @@ public:
     }
 };
 class Pawn : public ChessPiece {
-    bool long_stepped = false;
+    Square *en_passant_square;
+    Pawn *get_en_passant_pawn(Square *square) {
+        PieceGroup en_passant_pawns = board.get_pieces_by_flags(PAWN_EN_PASSANT);
+        for(unsigned i = 0; i < en_passant_pawns.count(); ++i) {
+            Pawn *en_passant_pawn = dynamic_cast<Pawn *>(en_passant_pawns[i]);
+            if(en_passant_pawn == nullptr)
+                throw InvalidPieceFlagException;
+            if(en_passant_pawn->en_passant_square == square)
+                return en_passant_pawn;
+        }
+        return nullptr;
+    }
 public:
     Pawn(Player &owner, Board &board, Square *square, King *king)
     : Piece(owner, board, square),
@@ -86,24 +97,44 @@ public:
         return false;
     }
     bool can_move_0(Square &target) {
+        Piece *target_piece = board.get_piece(target);
         RelCoors rel = square->rel_coors(target);
         unsigned d = rel.distance();
-        if(d == 1) {
-            for(unsigned i = 0; i < DIMENSIONS; ++i) {
-                if(rel[i] != 0 && rel[i] == owner.get_forward(i))
-                    return board.get_piece(target) == nullptr;
+        if(target_piece == NULL) {
+            if(d == 1) {
+                for(unsigned i = 0; i < DIMENSIONS; ++i) {
+                    if(rel[i] != 0 && rel[i] == owner.get_forward(i))
+                        return board.get_piece(target) == nullptr;
+                }
+            }
+            else if(!has_moved() && d == 4) {
+                for(unsigned i = 0; i < DIMENSIONS; ++i) {
+                    if(rel[i] != 0 && rel[i] == owner.get_forward(i) * 2 && board.get_piece(target) == nullptr) {
+                        Square *between = board.get_square(square->get_coors() + Direction(rel));
+                        return between != nullptr && board.get_piece(*between) == nullptr;
+                    }
+                }
             }
         }
-        else if(!has_moved() && d == 4) {
-            for(unsigned i = 0; i < DIMENSIONS; ++i) {
-                if(rel[i] != 0 && rel[i] == owner.get_forward(i) * 2 && board.get_piece(target) == nullptr) {
-                    Square *between = board.get_square(square->get_coors() + Direction(rel));
-                    return between != nullptr && board.get_piece(*between) == nullptr;
-                }
+        if(threatening(target)) {
+            if(target_piece != NULL) {
+                return can_take(target_piece);
+            }
+            else {
             }
         }
         return false;
     }
+    void move_to(Square &target) {
+        RelCoors rc = square.rel_coors(target);
+        bool long_move = rc.distance(target) == 4;
+        if(long_move)
+            en_passant_square = board.get_square(square.get_coors() + Direction(rc));
+        Piece::move_to(target);
+        if(long_move)
+            set_flags(PAWN_EN_PASSANT);
+    }
+    void on_owners_move() { unset_flags(PAWN_EN_PASSANT); }
 };
 class Rook : public ChessPiece, public LinearPiece {
 public:

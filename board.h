@@ -13,21 +13,27 @@ namespace Rules {
     void init(Game &);
 }
 
-class SquareGroup {
-    Square *squares[Rules::N_SQUARES];
+template<class T, unsigned MAX_SIZE>
+class Group {
+    T *entries[MAX_SIZE];
     unsigned n = 0;
 public:
-    void add(Square *square) {
+    void add(T *entry) {
         for(unsigned i = 0; i < n; ++i)
-            if(squares[i] == square) return;
-        if(n >= Rules::N_SQUARES)
-            throw std::out_of_range("square group is full? (more unique squares added then all of them)");
-        squares[n++] = square;
+            if(entries[i] == entry) return;
+        if(n >= MAX_SIZE)
+            throw std::out_of_range("group is full? (shouldnt be possible: more unique entries added then all of them)");
+        entries[n++] = entry;
     }
     unsigned count() { return n; }
-    Square *&operator[](unsigned i) { return squares[i]; }
-    Square *operator[](unsigned i) const { return squares[i]; }
+    Square *&operator[](unsigned i) { return entries[i]; }
+    Square *operator[](unsigned i) const { return entries[i]; }
 };
+
+typedef Group<Square, Rules::N_SQUARES> SquareGroup;
+typedef Group<Piece, Rules::N_PIECES> PieceGroup;
+
+class PieceGroup
 
 class Board {
     Square *squares[Rules::N_SQUARES];
@@ -35,9 +41,12 @@ class Board {
 public:
     Square *get_square(Coors coors);
     Piece *get_piece(Square &square);
+    void remove_piece(Piece *piece);
+    void add_piece(Piece *piece);
     bool threatened(Piece &piece) const;
     bool empty_between(Square &s1, Square &s2);
     SquareGroup get_target_squares(Piece &piece);
+    PieceGroup get_pieces_by_flags(int flags);
     virtual ~Board();
     friend void Rules::init(Game &);
 };

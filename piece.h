@@ -8,7 +8,12 @@
 
 class MoveException : public std::exception {
 public:
-    MoveException() : std::exception("No legal move.\n") {}
+    MoveException() : std::exception("No legal move.") {}
+};
+
+class InvalidPieceFlagException : public std::exception {
+public:
+    InvalidPieceFlagException() : std::exception("Invalid flag on piece.") {}
 };
 
 class Piece {
@@ -17,6 +22,7 @@ protected:
     Board &board;
     Square *square;
     unsigned move_counter = 0;
+    int flags;
 public:
     Piece(Player &owner, Board &board, Square *square)
     : owner(owner), board(board), square(square) {}
@@ -28,16 +34,20 @@ public:
         return can_take(board.get_piece(target)) && threatening(target);
     }
     virtual bool can_move_1(Square &target) { return can_move_0(target); }
+    virtual void move_to(Square &target);
     virtual void move();
-    virtual void onOwnersMove() {}
-    virtual void onFriendlyMove() {}
-    virtual void onEnemyMove() {}
-    virtual void onPurge() {}
-    bool has_moved() { return move_counter == 0; }
+    virtual void on_owners_move() {}
+    virtual void on_friendly_move() {}
+    virtual void on_enemy_move() {}
+    virtual void on_purge() {}
+    bool has_moved() { return move_counter > 0; }
     void set_square(Square *square) { this->square = square; }
     Square *get_square() const { return square; }
     Player &get_owner() { return owner; }
     Player const &get_owner() const { return owner; }
+    bool ckeck_flags(int flags) const { return (this->flags & flags) == flags; }
+    void set_flags(int flags) { this->flags |= flags; }
+    void unset_flags(int flags) { this->flags &= ~flags; }
     virtual ~Piece() {}
 };
 

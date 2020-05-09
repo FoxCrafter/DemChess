@@ -45,6 +45,14 @@ SquareGroup Board::get_target_squares(Piece &piece) {
     return target_squares;
 }
 
+PieceGroup Board::get_pieces_by_flags(int flags) {
+    PieceGroup matching_pieces;
+    for(unsigned i = 0; i < Rules::N_PIECES; ++i)
+        if(pieces[i]->check_flags(flags))
+            matching_pieces.add(pieces[i]);
+    return matching_pieces;
+}
+
 Board::~Board() {
     for(unsigned i = 0; i < Rules::N_SQUARES; ++i)
         delete squares[i];
