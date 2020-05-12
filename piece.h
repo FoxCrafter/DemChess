@@ -25,7 +25,7 @@ protected:
     int flags;
 public:
     Piece(Player &owner, Board &board, Square *square)
-    : owner(owner), board(board), square(square) {}
+    : owner(owner), board(board), square(square), flags(0) {}
     virtual bool threatening(Square &target) = 0;
     virtual bool can_take(Piece *target_piece) {
         return target_piece == nullptr || target_piece->owner.get_team() != owner.get_team();

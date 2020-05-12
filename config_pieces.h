@@ -25,9 +25,6 @@ public:
 };
 class Rook;
 class King : public ChessPiece {
-    static unsigned const N_ROOKS_MAX = 2;
-    unsigned n_rooks = 0;
-    Rook *rooks[N_ROOKS_MAX];
 public:
     King(Player &owner, Board &board, Square *square)
     : Piece(owner, board, square),
@@ -43,19 +40,26 @@ public:
             return true;
         // CASTLING
         if(!has_moved() && board.threatened(*this)) {
-            Direction rel = square->rel_coors(target);
-            for(unsigned i = 0; i < n_rooks; ++i) {
-                if(!((Piece *)rooks[i])->has_moved() && board.empty_between(*square, *((Piece *)rooks[i])->get_square())) {
-                    Direction dir = square->direction(*((Piece *)rooks[i])->get_square());
-                    if(rel == dir + dir) {
-                        Square *between = board.get_square(square->get_coors() + dir);
-                        if(between != nullptr) {
-                            Square *bak = square;
-                            square = between;
-                            bool through_check = board.threatened(*this);
-                            square = bak;
-                            if(!through_check)
-                                return true;
+            RelCoors rel = square->rel_coors(target);
+            PieceGroup rooks_not_moved = board.get_pieces_by_flags(ROOK_NOT_MOVED);
+            for(unsigned i = 0; i < rooks_not_moved.count(); ++i) {
+                Rook *rook = dynamic_cast<Rook *>(rooks_not_moved[i]);
+                if(rook == nullptr)
+                    throw InvalidPieceFlagException;
+                if(rook->get_owner() == owner) {
+                    RelCoors rook_rel = square->rel_coors(*rook->get_square());
+                    Direction rook_dir(rook_rel);
+                    if(rook_rel.distance() > rel.distance() && board.empty_between(*square, *rook->get_square())) {
+                        if(rel == rook_dir + rook_dir) {
+                            Square *between = board.get_square(square->get_coors() + rook_dir);
+                            if(between != nullptr) {
+                                Square *bak = square;
+                                square = between;
+                                bool through_check = board.threatened(*this);
+                                square = bak;
+                                if(!through_check)
+                                    return true;
+                            }
                         }
                     }
                 }
@@ -63,11 +67,61 @@ public:
         }
         return false;
     }
-    void add_rook(Rook *rook) {
-        if(n_rooks == N_ROOKS_MAX)
-            throw "King cant handle this many rooks";
-        rooks[n_rooks++] = rook;
+    void move_to(Square &target) {
+        RelCoors rel = square->rel_coors(target);
+        if(rel.distance() == 4) {
+            Direction dir(rel);
+            PieceGroup rooks_not_moved = board.get_pieces_by_flags(ROOK_NOT_MOVED);
+            for(unsigned i = 0; i < rooks_not_moved.count(); ++i) {
+                Rook *rook = dynamic_cast<Rook *>(rooks_not_moved[i]);
+                if(rook == nullptr)
+                    throw InvalidPieceFlagException;
+                Square *rook_square = rook->get_square();
+                if(square->direction(*rook_square) == dir && board.empty_between(*square, *rook_square) {
+                    Square *rook_target = board->get_square(square->get_coors() + dir);
+                    if(rook_target != nullptr) {
+                        rook->set_square(rook_target);
+                        rook->unset_flags(ROOK_NOT_MOVED);
+                    }
+                    break;
+                }
+            }
+        }
+        Piece::move_to(square);
     }
+};
+class Rook : public ChessPiece, public LinearPiece {
+public:
+    Rook(Player &owner, Board &board, Square *square, King *king, bool original = true)
+    : Piece(owner, board, square),
+    ChessPiece(owner, board, square, king),
+    LinearPiece(owner, board, square, 1, 1) {
+        if(original) set_flags(ROOK_NOT_MOVED);
+        //king->add_rook(this);
+    }
+};
+class Knight : public ChessPiece {
+public:
+    Knight(Player &owner, Board &board, Square *square, King *king)
+    : Piece(owner, board, square),
+    ChessPiece(owner, board, square, king) {}
+    bool threatening(Square &target) {
+        return square->distance(target) == 5;
+    }
+};
+class Bishop : public ChessPiece, public LinearPiece {
+public:
+    Bishop(Player &owner, Board &board, Square *square, King *king)
+    : Piece(owner, board, square),
+    ChessPiece(owner, board, square, king),
+    LinearPiece(owner, board, square, 2, 2) {}
+};
+class Queen : public ChessPiece, public LinearPiece {
+public:
+    Queen(Player &owner, Board &board, Square *square, King *king)
+    : Piece(owner, board, square),
+    ChessPiece(owner, board, square, king),
+    LinearPiece(owner, board, square, 1, 2) {}
 };
 class Pawn : public ChessPiece {
     Square *en_passant_square;
@@ -121,52 +175,50 @@ public:
                 return can_take(target_piece);
             }
             else {
+                Pawn *en_passant_pawn = get_en_passant_pawn(target);
+                if(en_passant_pawn != nullptr)
+                    return can_take(en_passant_pawn);
             }
         }
         return false;
     }
     void move_to(Square &target) {
         RelCoors rc = square.rel_coors(target);
-        bool long_move = rc.distance(target) == 4;
-        if(long_move)
-            en_passant_square = board.get_square(square.get_coors() + Direction(rc));
+        unsigned dis = rc.distance(target);
+        Direction dir(rc);
+        bool long_move = dis == 4;
+        if(long_move) {
+            Square *ep_square = board.get_square(square.get_coors() + dir);
+            Pawn *prev_en_passant_pawn = get_en_passant_pawn(ep_square);
+            if(prev_en_passant_pawn != nullptr)
+                prev_en_passant_pawn->unset_flags(PAWN_EN_PASSANT);
+            en_passant_square = ep_square;
+        }
+        else if(dis == 2 && board.get_piece(target) == nullptr) {
+            Pawn *en_passant_pawn = get_en_passant_pawn(&target);
+            if(en_passant_pawn != nullptr)
+                board.remove_piece(en_passant_pawn);
+        }
         Piece::move_to(target);
-        if(long_move)
+        if(board.get_square(square->get_coors() + dir) == nullptr) {
+            evolve();
+        }
+        else if(long_move)
             set_flags(PAWN_EN_PASSANT);
     }
+    void evolve() {
+        Piece *new_piece;
+        unsigned random = std::rand() % 4;
+        switch(random) {
+        case 0: new_piece = new Rook  (owner, board, square, king, false); break;
+        case 1: new_piece = new Knight(owner, board, square, king       ); break;
+        case 2: new_piece = new Bishop(owner, board, square, king       ); break;
+        case 3: new_piece = new Queen (owner, board, square, king       ); break;
+        }
+        board.add_piece(new_piece);
+        board.remove_piece(this);
+    }
     void on_owners_move() { unset_flags(PAWN_EN_PASSANT); }
-};
-class Rook : public ChessPiece, public LinearPiece {
-public:
-    Rook(Player &owner, Board &board, Square *square, King *king)
-    : Piece(owner, board, square),
-    ChessPiece(owner, board, square, king),
-    LinearPiece(owner, board, square, 1, 1) {
-        king->add_rook(this);
-    }
-};
-class Knight : public ChessPiece {
-public:
-    Knight(Player &owner, Board &board, Square *square, King *king)
-    : Piece(owner, board, square),
-    ChessPiece(owner, board, square, king) {}
-    bool threatening(Square &target) {
-        return square->distance(target) == 5;
-    }
-};
-class Bishop : public ChessPiece, public LinearPiece {
-public:
-    Bishop(Player &owner, Board &board, Square *square, King *king)
-    : Piece(owner, board, square),
-    ChessPiece(owner, board, square, king),
-    LinearPiece(owner, board, square, 2, 2) {}
-};
-class Queen : public ChessPiece, public LinearPiece {
-public:
-    Queen(Player &owner, Board &board, Square *square, King *king)
-    : Piece(owner, board, square),
-    ChessPiece(owner, board, square, king),
-    LinearPiece(owner, board, square, 1, 2) {}
 };
 
 }
