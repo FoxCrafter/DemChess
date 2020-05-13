@@ -17,6 +17,7 @@ public:
 };
 
 class Piece {
+    bool enabled;
 protected:
     Player &owner;
     Board &board;
@@ -25,7 +26,10 @@ protected:
     int flags;
 public:
     Piece(Player &owner, Board &board, Square *square)
-    : owner(owner), board(board), square(square), flags(0) {}
+    : enabled(true), owner(owner), board(board), square(square), flags(0) {}
+    void enable() { enabled = true; }
+    void disable() { enabled = false; }
+    bool is_enabled() { return enabled; }
     virtual bool threatening(Square &target) = 0;
     virtual bool can_take(Piece *target_piece) {
         return target_piece == nullptr || target_piece->owner.get_team() != owner.get_team();

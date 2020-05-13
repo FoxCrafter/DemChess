@@ -16,10 +16,15 @@ public:
     bool can_move_1(Square &target) {
         if(!can_move_0(target))
             return false;
+        Piece *target_piece = board.get_piece(target);
+        if(target_piece != nullptr)
+            target_piece->disable();
         Square *bak = square;
         square = &target;
         bool check = board.threatened(*(Piece *)king);
         square = bak;
+        if(target_piece != nullptr)
+            target_piece->enable();
         return !check;
     }
 };

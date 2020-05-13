@@ -20,7 +20,8 @@ Piece *Board::get_piece(Square &square) {
 
 bool Board::threatened(Piece &piece) const {
     for(unsigned i = 0; i < Rules::N_PIECES; ++i) {
-        if(pieces[i]->get_owner().get_team() != piece.get_owner().get_team()
+        if(pieces[i] != nullptr && pieces[i]->is_enabled()
+        && pieces[i]->get_owner().get_team() != piece.get_owner().get_team()
         && pieces[i]->threatening(*piece.get_square()))
             return true;
     }
@@ -48,7 +49,7 @@ SquareGroup Board::get_target_squares(Piece &piece) {
 PieceGroup Board::get_pieces_by_flags(int flags) {
     PieceGroup matching_pieces;
     for(unsigned i = 0; i < Rules::N_PIECES; ++i)
-        if(pieces[i]->check_flags(flags))
+        if(pieces[i] != nullptr && pieces[i]->is_enabled() && pieces[i]->check_flags(flags))
             matching_pieces.add(pieces[i]);
     return matching_pieces;
 }
