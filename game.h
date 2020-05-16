@@ -14,7 +14,10 @@ public:
     Game() {
         rules::init(*this);
     }
-    virtual ~Game() { delete [] players; }
+    virtual ~Game() {
+        for(unsigned i = 0; i < rules::N_PLAYERS; ++i)
+            delete players[i];
+    }
     friend void rules::init(Game &);
 };
 
