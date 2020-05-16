@@ -33,8 +33,6 @@ public:
 typedef Group<Square, Rules::N_SQUARES> SquareGroup;
 typedef Group<Piece, Rules::N_PIECES> PieceGroup;
 
-class PieceGroup
-
 class Board {
     Square *squares[Rules::N_SQUARES];
     Piece *pieces[Rules::N_PIECES];

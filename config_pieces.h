@@ -102,7 +102,6 @@ public:
     ChessPiece(owner, board, square, king),
     LinearPiece(owner, board, square, 1, 1) {
         if(original) set_flags(ROOK_NOT_MOVED);
-        //king->add_rook(this);
     }
 };
 class Knight : public ChessPiece {
