@@ -1,38 +1,38 @@
 #include "geometry.h"
 
 Coors::Coors(int const *coors) {
-    for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
+    for(unsigned i = 0; i < rules::DIMENSIONS; ++i)
         this->coors[i] = coors[i];
 }
 
 Coors Coors::operator+(RelCoors const &rc) const {
     Coors res;
-    for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
+    for(unsigned i = 0; i < rules::DIMENSIONS; ++i)
         res[i] = coors[i] + rc[i];
     return res;
 }
 
 Coors &Coors::operator+=(RelCoors const &rc) {
-    for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
+    for(unsigned i = 0; i < rules::DIMENSIONS; ++i)
         coors[i] += rc[i];
     return *this;
 }
 
 bool Coors::operator==(Coors const &c1) const {
-    for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
+    for(unsigned i = 0; i < rules::DIMENSIONS; ++i)
         if(coors[i] != c1[i])
             return false;
     return true;
 }
 
 RelCoors::RelCoors(Coors const &from, Coors const &to) {
-    for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
+    for(unsigned i = 0; i < rules::DIMENSIONS; ++i)
         coors[i] = to[i] - from[i];
 }
 
 unsigned RelCoors::distance() const {
     unsigned d = 0;
-    for(unsigned i = 0; i < Rules::DIMENSIONS; ++i)
+    for(unsigned i = 0; i < rules::DIMENSIONS; ++i)
         d += coors[i] * coors[i];
     return d;
 }
@@ -44,11 +44,11 @@ inline static unsigned abs(int x) {
 void Direction::unitize() {
     unsigned i = 0;
     while(coors[i] == 0) {
-        if(++i >= Rules::DIMENSIONS)
+        if(++i >= rules::DIMENSIONS)
             throw "all zero direction";
     }
     unsigned gcd = abs(coors[i]);
-    while(++i < Rules::DIMENSIONS) {
+    while(++i < rules::DIMENSIONS) {
         if(coors[i] != 0) {
             unsigned tmp0 = gcd;
             unsigned tmp1 = abs(coors[i]);
@@ -66,6 +66,6 @@ void Direction::unitize() {
             }
         }
     }
-    for(i = 0; i < Rules::DIMENSIONS; ++i)
+    for(i = 0; i < rules::DIMENSIONS; ++i)
         coors[i] /= gcd;
 }

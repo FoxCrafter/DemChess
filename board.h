@@ -9,7 +9,7 @@
 class Piece;
 class Coors;
 class Game;
-namespace Rules {
+namespace rules {
     void init(Game &);
 }
 
@@ -30,12 +30,12 @@ public:
     Square *operator[](unsigned i) const { return entries[i]; }
 };
 
-typedef Group<Square, Rules::N_SQUARES> SquareGroup;
-typedef Group<Piece, Rules::N_PIECES> PieceGroup;
+typedef Group<Square, rules::N_SQUARES> SquareGroup;
+typedef Group<Piece, rules::N_PIECES> PieceGroup;
 
 class Board {
-    Square *squares[Rules::N_SQUARES];
-    Piece *pieces[Rules::N_PIECES];
+    Square *squares[rules::N_SQUARES];
+    Piece *pieces[rules::N_PIECES];
 public:
     Square *get_square(Coors coors);
     Piece *get_piece(Square &square);
@@ -46,7 +46,7 @@ public:
     SquareGroup get_target_squares(Piece &piece);
     PieceGroup get_pieces_by_flags(int flags);
     virtual ~Board();
-    friend void Rules::init(Game &);
+    friend void rules::init(Game &);
 };
 
 #endif

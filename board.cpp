@@ -3,7 +3,7 @@
 #include "square.h"
 
 Square *Board::get_square(Coors coors) {
-    for(unsigned i = 0; i < Rules::N_SQUARES; ++i) {
+    for(unsigned i = 0; i < rules::N_SQUARES; ++i) {
         if(squares[i]->get_coors() == coors)
             return squares[i];
     }
@@ -11,7 +11,7 @@ Square *Board::get_square(Coors coors) {
 }
 
 Piece *Board::get_piece(Square &square) {
-    for(unsigned i = 0; i < Rules::N_PIECES; ++i) {
+    for(unsigned i = 0; i < rules::N_PIECES; ++i) {
         if(pieces[i]->get_square() == &square)
             return pieces[i];
     }
@@ -19,7 +19,7 @@ Piece *Board::get_piece(Square &square) {
 }
 
 bool Board::threatened(Piece &piece) const {
-    for(unsigned i = 0; i < Rules::N_PIECES; ++i) {
+    for(unsigned i = 0; i < rules::N_PIECES; ++i) {
         if(pieces[i] != nullptr && pieces[i]->is_enabled()
         && pieces[i]->get_owner().get_team() != piece.get_owner().get_team()
         && pieces[i]->threatening(*piece.get_square()))
@@ -40,7 +40,7 @@ bool Board::empty_between(Square &s1, Square &s2) {
 
 SquareGroup Board::get_target_squares(Piece &piece) {
     SquareGroup target_squares;
-    for(unsigned i = 0; i < Rules::N_SQUARES; ++i)
+    for(unsigned i = 0; i < rules::N_SQUARES; ++i)
         if(piece.can_move_1(*squares[i]))
             target_squares.add(squares[i]);
     return target_squares;
@@ -48,15 +48,15 @@ SquareGroup Board::get_target_squares(Piece &piece) {
 
 PieceGroup Board::get_pieces_by_flags(int flags) {
     PieceGroup matching_pieces;
-    for(unsigned i = 0; i < Rules::N_PIECES; ++i)
+    for(unsigned i = 0; i < rules::N_PIECES; ++i)
         if(pieces[i] != nullptr && pieces[i]->is_enabled() && pieces[i]->check_flags(flags))
             matching_pieces.add(pieces[i]);
     return matching_pieces;
 }
 
 Board::~Board() {
-    for(unsigned i = 0; i < Rules::N_SQUARES; ++i)
+    for(unsigned i = 0; i < rules::N_SQUARES; ++i)
         delete squares[i];
-    for(unsigned i = 0; i < Rules::N_PIECES; ++i)
+    for(unsigned i = 0; i < rules::N_PIECES; ++i)
         delete pieces[i];
 }

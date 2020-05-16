@@ -5,17 +5,17 @@
 #include "board.h"
 
 class Game;
-namespace Rules { void init(Game &); }
+namespace rules { void init(Game &); }
 
 class Game {
-    Player *players[Rules::N_PLAYERS];
+    Player *players[rules::N_PLAYERS];
     Board board;
 public:
     Game() {
-        Rules::init(*this);
+        rules::init(*this);
     }
     virtual ~Game() { delete [] players; }
-    friend void Rules::init(Game &);
+    friend void rules::init(Game &);
 };
 
 #endif

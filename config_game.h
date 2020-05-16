@@ -4,7 +4,7 @@
 #include "game.h"
 #include "config_pieces.h"
 
-namespace Rules {
+namespace rules {
 
 void init(Game &game) {
     for(unsigned i = 0; i < N_SQUARES; ++i)

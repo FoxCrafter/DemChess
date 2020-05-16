@@ -6,7 +6,7 @@
 class RelCoors;
 class Coors {
 protected:
-    int coors[Rules::DIMENSIONS];
+    int coors[rules::DIMENSIONS];
     Coors() {}
 public:
     Coors(int const *coors);

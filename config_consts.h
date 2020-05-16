@@ -1,7 +1,7 @@
 #ifndef CONFIG_CONSTS_H
 #define CONFIG_CONSTS_H
 
-namespace Rules {
+namespace rules {
 
 unsigned const N_PLAYERS = 2;
 

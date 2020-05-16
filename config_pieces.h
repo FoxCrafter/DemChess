@@ -4,7 +4,7 @@
 #include "config_consts.h"
 #include "piece.h"
 
-namespace Rules {
+namespace rules {
 
 class King;
 class ChessPiece : public virtual Piece {
