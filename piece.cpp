@@ -30,7 +30,7 @@ void Piece::move_to(Square &target) {
 void Piece::move() {
     SquareGroup targets = board.get_target_squares(*this);
     if(targets.count() == 0)
-        throw MoveException;
+        throw MoveException("No legal move.");
     unsigned random = std::rand() % targets.count();
     move_to(*targets[random]);
 }

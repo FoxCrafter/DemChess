@@ -6,14 +6,14 @@
 
 #include <stdexcept>
 
-class MoveException : public std::exception {
+class MoveException : public std::runtime_error {
 public:
-    MoveException() : std::exception("No legal move.") {}
+    MoveException(char const *msg) : runtime_error(msg) {}
 };
 
-class InvalidPieceFlagException : public std::exception {
+class InvalidPieceFlagException : public std::runtime_error {
 public:
-    InvalidPieceFlagException() : std::exception("Invalid flag on piece.") {}
+    InvalidPieceFlagException() : std::runtime_error("Invalid flag on piece.") {}
 };
 
 class Piece {
