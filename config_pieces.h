@@ -100,7 +100,7 @@ public:
                 }
             }
         }
-        Piece::move_to(square);
+        Piece::move_to(target);
     }
 };
 class Knight : public ChessPiece {
