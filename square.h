@@ -3,12 +3,6 @@
 
 #include "geometry.h"
 
-class Color {
-    char data;
-public:
-    Color(char data) : data(data) {}
-};
-
 class Square {
     Coors const coors;
     Color const color;
