@@ -178,7 +178,7 @@ public:
                 return can_take(target_piece);
             }
             else {
-                Pawn *en_passant_pawn = get_en_passant_pawn(target);
+                Pawn *en_passant_pawn = get_en_passant_pawn(&target);
                 if(en_passant_pawn != nullptr)
                     return can_take(en_passant_pawn);
             }
@@ -186,12 +186,12 @@ public:
         return false;
     }
     void move_to(Square &target) {
-        RelCoors rc = square.rel_coors(target);
-        unsigned dis = rc.distance(target);
+        RelCoors rc = square->rel_coors(target);
+        unsigned dis = rc.distance();
         Direction dir(rc);
         bool long_move = dis == 4;
         if(long_move) {
-            Square *ep_square = board.get_square(square.get_coors() + dir);
+            Square *ep_square = board.get_square(square->get_coors() + dir);
             Pawn *prev_en_passant_pawn = get_en_passant_pawn(ep_square);
             if(prev_en_passant_pawn != nullptr)
                 prev_en_passant_pawn->unset_flags(PAWN_EN_PASSANT);
