@@ -36,6 +36,7 @@ typedef Group<Piece, rules::N_PIECES> PieceGroup;
 class Board {
     Square *squares[rules::N_SQUARES];
     Piece *pieces[rules::N_PIECES];
+    Coors min_coors, max_coors;
 public:
     Square *get_square(Coors coors);
     Piece *get_piece(Square &square);
@@ -45,6 +46,8 @@ public:
     bool empty_between(Square &s1, Square &s2);
     SquareGroup get_target_squares(Piece &piece);
     PieceGroup get_pieces_by_flags(int flags);
+    Coors get_min_coors() const { return min_coors; }
+    Coors get_max_coors() const { return max_coors; }
     virtual ~Board();
     friend void rules::init(Game &);
 };
