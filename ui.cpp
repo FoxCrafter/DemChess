@@ -7,14 +7,14 @@
 
 namespace ui {
 
-UI::Canvas::CanvasCoors::CanvasCoors(Board &board, Coors coors) {
+UI::Canvas::CanvasCoors::CanvasCoors(Board const &board, Coors coors) {
     Coors min_coors = board.get_min_coors();
     Coors max_coors = board.get_max_coors();
     // Y
     y = 0;
     unsigned coeff = 1;
     for(int i = rules::DIMENSIONS - 1; i >= 0; i -= 2) {
-        y += coeff * (coors[i] = min_coors[i]);
+        y += coeff * (coors[i] - min_coors[i]);
         coeff = coeff * (max_coors[i] - min_coors[i] + 1) + 3;
     }
     y += rules::DIMENSIONS / 2 * 2 - 1;
@@ -37,14 +37,31 @@ unsigned UI::Canvas::CanvasCoors::screen_y(int offset) {
 
 unsigned UI::Canvas::CanvasCoors::screen_x(int offset) {
     int res = 2 * (x - offset);
-    if(res < 0 || res >= n_cols / 2 * 2)
+    if(res < 0 || res >= n_cols - 1)
         throw std::out_of_range("Outside screen.");
     return res;
 }
 
-void UI::Canvas::SquareDrawer::operator(Square &square) {
-    CanvasCoors cc(square.get_coors());
+#define COLOR(FORE, BACK) COLOR_PAIR(BACK * 8 + FORE + 2)
 
+void UI::Canvas::SquareDrawer::operator()(Square &square) {
+    Board const &board = (*canvas.game)->get_board();
+    CanvasCoors cc(board, square.get_coors());
+    try {
+        move(cc.screen_y(canvas.offset_y), cc.screen_x(canvas.offset_x));
+        Piece const *piece = board.get_piece(square);
+        Color foreground = (Color)0, backgound = square.get_color();
+        int display_char = ' ';
+        if(piece != nullptr) {
+            display_char = piece->get_display_char();
+            foreground = piece->get_owner().get_color();
+        }
+        attron(COLOR(foreground, backgound));
+        wchar_t cccc[3] = {display_char, ' ', '\0'};
+        addwstr(cccc);
+        attroff(COLOR_PAIR(2));
+    }
+    catch(...) {}
 }
 
 void UI::Canvas::offset(int ch) {
@@ -58,7 +75,8 @@ void UI::Canvas::offset(int ch) {
 
 void UI::Canvas::draw() const {
     Board const &board = (*game)->get_board();
-
+    SquareDrawer sd(*this);
+    board.for_each_square(sd);
 }
 
 unsigned UI::n_rows, UI::n_cols;
@@ -131,6 +149,8 @@ UI::UI() {
     //raw();
     start_color();
     init_pair(COLOR_PAIR_INVALID, COLOR_WHITE, COLOR_RED);
+    for(short i = 0; i < 64; ++i)
+        init_pair(i + 2, i % 8, i / 8);
     update_dimensions();
     start_new_game();
     coor_input.init(&game);
@@ -144,6 +164,7 @@ void UI::start_new_game() {
 
 void UI::draw() {
     clear();
+    canvas.draw();
     log_display.print();
     coor_input.print();
     refresh();

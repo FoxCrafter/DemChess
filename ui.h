@@ -12,17 +12,17 @@ class UI {
         class CanvasCoors {
             unsigned y, x;
         public:
-            CanvasCoors(Board &board, Coors coors);
-            unsigned screen_y(unsigned n_rows, int offset);
-            unsigned screen_x(unsigned n_cols, int offset);
+            CanvasCoors(Board const &board, Coors coors);
+            unsigned screen_y(int offset);
+            unsigned screen_x(int offset);
         };
         class SquareDrawer {
-            Canvas &canvas;
+            Canvas const &canvas;
         public:
-            SquareDrawer(Canvas &canvas) : canvas(canvas) {}
+            SquareDrawer(Canvas const &canvas) : canvas(canvas) {}
             void operator()(Square &square);
         };
-        static unsigned const offset_step = 4;
+        static unsigned const offset_step = 1;
         int offset_x = 0;
         int offset_y = 0;
     public:
