@@ -161,8 +161,9 @@ void Pawn::evolve() {
     case 2: new_piece = new Bishop(owner, board, square, king       ); break;
     case 3: new_piece = new Queen (owner, board, square, king       ); break;
     }
-    board.add_piece(new_piece);
+    Board &tmp = board;
     board.remove_piece(this);
+    tmp.add_piece(new_piece);
 }
 
 }
