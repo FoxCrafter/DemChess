@@ -33,4 +33,6 @@ void init(Game &game) {
     }
 }
 
+}
+
 #endif
