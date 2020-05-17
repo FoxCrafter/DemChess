@@ -18,6 +18,28 @@ Piece *Board::get_piece(Square &square) {
     return nullptr;
 }
 
+void Board::remove_piece(Piece *piece) {
+    for(unsigned i = 0; i < rules::N_PIECES; ++i) {
+        if(pieces[i] == piece) {
+            delete pieces[i];
+            pieces[i] = nullptr;
+        }
+    }
+}
+
+void Board::add_piece(Piece *piece) {
+    for(unsigned i = 0; i < rules::N_PIECES; ++i)
+        if(pieces[i] == piece)
+            return;
+    for(unsigned i = 0; i < rules::N_PIECES; ++i) {
+        if(pieces[i] == nullptr) {
+            pieces[i] = piece;
+            return;
+        }
+    }
+    throw std::out_of_range("Failed to add piece");
+}
+
 bool Board::threatened(Piece &piece) const {
     for(unsigned i = 0; i < rules::N_PIECES; ++i) {
         if(pieces[i] != nullptr && pieces[i]->is_enabled()
