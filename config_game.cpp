@@ -33,6 +33,10 @@ void init(Game &game) {
 #       undef ADD_PIECE
 #       undef PIECE_PARAMS
     }
+    game.board.min_coors[0] = 0;
+    game.board.min_coors[1] = 0;
+    game.board.max_coors[0] = 7;
+    game.board.max_coors[1] = 7;
 }
 
 }
