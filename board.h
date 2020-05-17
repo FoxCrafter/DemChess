@@ -26,8 +26,8 @@ public:
         entries[n++] = entry;
     }
     unsigned count() { return n; }
-    Square *&operator[](unsigned i) { return entries[i]; }
-    Square *operator[](unsigned i) const { return entries[i]; }
+    T *&operator[](unsigned i) { return entries[i]; }
+    T *operator[](unsigned i) const { return entries[i]; }
 };
 
 typedef Group<Square, rules::N_SQUARES> SquareGroup;
