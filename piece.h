@@ -24,9 +24,10 @@ protected:
     Square *square;
     unsigned move_counter = 0;
     int flags;
+    int display_char;
 public:
     Piece(Player &owner, Board &board, Square *square)
-    : enabled(true), owner(owner), board(board), square(square), flags(0) {}
+    : enabled(true), owner(owner), board(board), square(square), flags(0), display_char('?') {}
     void enable() { enabled = true; }
     void disable() { enabled = false; }
     bool is_enabled() { return enabled; }
@@ -52,6 +53,7 @@ public:
     bool check_flags(int flags) const { return (this->flags & flags) == flags; }
     void set_flags(int flags) { this->flags |= flags; }
     void unset_flags(int flags) { this->flags &= ~flags; }
+    int get_display_char() const { return display_char; }
     virtual ~Piece() {}
 };
 
