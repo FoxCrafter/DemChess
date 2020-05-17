@@ -7,14 +7,16 @@
 namespace rules {
 
 void init(Game &game) {
-    for(unsigned i = 0; i < N_SQUARES; ++i)
-        game.board.squares[i] = new Square(Coors(i % 8, i / 8), Color(i % 2));
-    int const forward_y[] = {1, -1};
+    for(int i = 0; i < N_SQUARES; ++i) {
+        int const coor_array[] = {i % 8, i / 8};
+        game.board.squares[i] = new Square(Coors(coor_array), Color(i % 2));
+    }
+    int const forward_array[][2] = {{0, 1}, {0, -1}};
     int const pieces_y[] = {0, 7};
     int const pawn_y[] = {1, 6};
     unsigned i_piece = 0;
     for(unsigned i_player = 0; i_player < N_PLAYERS; ++i_player) {
-        game.players[i_player] = new Player(i_player, i_player, Direction((int *){0, forward_y[i]}));
+        game.players[i_player] = new Player(i_player, i_player, Direction(forward_array[i_player]));
 #       define PIECE_PARAMS(X, Y_ARR) *game.players[i_player], game.board, game.board.squares[8 * (Y_ARR)[i_player] + (X)]
 #       define ADD_PIECE game.board.pieces[i_piece++] =
         King *king = new King(PIECE_PARAMS(4, pieces_y));
