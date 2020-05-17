@@ -10,6 +10,10 @@ namespace rules { void init(Game &); }
 class Game {
     Player *players[rules::N_PLAYERS];
     Board board;
+    unsigned active_player = 0;
+    void pass_to_next_player() {
+        active_player = (active_player + 1) % rules::N_PLAYERS;
+    }
 public:
     Game() {
         rules::init(*this);
