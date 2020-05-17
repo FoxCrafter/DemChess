@@ -31,6 +31,8 @@ public:
         piece->move();
         pass_to_next_player();
     }
+    Board &get_board() { return board; }
+    Board const &get_board() const { return board; }
     virtual ~Game() {
         for(unsigned i = 0; i < rules::N_PLAYERS; ++i)
             delete players[i];
