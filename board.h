@@ -40,7 +40,7 @@ class Board {
 public:
     template<class Func>
     void for_each_square(Func func) {
-        for(unsigned i = 0; i < n; ++i)
+        for(unsigned i = 0; i < rules::N_SQUARES; ++i)
             if(squares[i] != nullptr)
                 func(*squares[i]);
     }
