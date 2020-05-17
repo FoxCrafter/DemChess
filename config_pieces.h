@@ -28,7 +28,15 @@ public:
         return !check;
     }
 };
-class Rook;
+class Rook : public ChessPiece, public LinearPiece {
+public:
+    Rook(Player &owner, Board &board, Square *square, King *king, bool original = true)
+    : Piece(owner, board, square),
+    ChessPiece(owner, board, square, king),
+    LinearPiece(owner, board, square, 1, 1) {
+        if(original) set_flags(ROOK_NOT_MOVED);
+    }
+};
 class King : public ChessPiece {
 public:
     King(Player &owner, Board &board, Square *square)
@@ -93,15 +101,6 @@ public:
             }
         }
         Piece::move_to(square);
-    }
-};
-class Rook : public ChessPiece, public LinearPiece {
-public:
-    Rook(Player &owner, Board &board, Square *square, King *king, bool original = true)
-    : Piece(owner, board, square),
-    ChessPiece(owner, board, square, king),
-    LinearPiece(owner, board, square, 1, 1) {
-        if(original) set_flags(ROOK_NOT_MOVED);
     }
 };
 class Knight : public ChessPiece {
