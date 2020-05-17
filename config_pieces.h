@@ -58,7 +58,7 @@ public:
             for(unsigned i = 0; i < rooks_not_moved.count(); ++i) {
                 Rook *rook = dynamic_cast<Rook *>(rooks_not_moved[i]);
                 if(rook == nullptr)
-                    throw InvalidPieceFlagException;
+                    throw InvalidPieceFlagException();
                 if(rook->get_owner() == owner) {
                     RelCoors rook_rel = square->rel_coors(*rook->get_square());
                     Direction rook_dir(rook_rel);
@@ -88,7 +88,7 @@ public:
             for(unsigned i = 0; i < rooks_not_moved.count(); ++i) {
                 Rook *rook = dynamic_cast<Rook *>(rooks_not_moved[i]);
                 if(rook == nullptr)
-                    throw InvalidPieceFlagException;
+                    throw InvalidPieceFlagException();
                 Square *rook_square = rook->get_square();
                 if(square->direction(*rook_square) == dir && board.empty_between(*square, *rook_square)) {
                     Square *rook_target = board->get_square(square->get_coors() + dir);
@@ -133,7 +133,7 @@ class Pawn : public ChessPiece {
         for(unsigned i = 0; i < en_passant_pawns.count(); ++i) {
             Pawn *en_passant_pawn = dynamic_cast<Pawn *>(en_passant_pawns[i]);
             if(en_passant_pawn == nullptr)
-                throw InvalidPieceFlagException;
+                throw InvalidPieceFlagException();
             if(en_passant_pawn->en_passant_square == square)
                 return en_passant_pawn;
         }
