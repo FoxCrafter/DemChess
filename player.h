@@ -5,14 +5,16 @@
 #include "geometry.h"
 
 class Player {
-    int team;
-    int id;
-    Direction forward;
+    int const team;
+    int const id;
+    Color const color;
+    Direction const forward;
 public:
-    Player(int team, int id, Direction forward) : team(team), id(id), forward(forward) {}
+    Player(int team, int id, Direction forward) : team(team), id(id), color(color), forward(forward) {}
     int get_team() const { return team; }
-    int get_id() { return id; }
-    int get_forward(unsigned i) { return forward[i]; }
+    int get_id() const { return id; }
+    int get_color() const { return color; }
+    int get_forward(unsigned i) const { return forward[i]; }
     bool operator==(Player const &p1) const { return id == p1.id; }
     bool operator!=(Player const &p1) const { return !(*this == p1); }
 };
