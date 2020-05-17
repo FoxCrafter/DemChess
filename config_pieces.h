@@ -22,7 +22,7 @@ public:
     ChessPiece(owner, board, square, king),
     LinearPiece(owner, board, square, 1, 1) {
         if(original) set_flags(ROOK_NOT_MOVED);
-        display_char = '\u265C';
+        display_char = L'\u265C';
     }
 };
 class King : public ChessPiece {
@@ -31,7 +31,7 @@ public:
     : Piece(owner, board, square),
     ChessPiece(owner, board, square, nullptr) {
         king = this;
-        display_char = '\u265A';
+        display_char = L'\u265A';
     }
     bool threatening(Square &target) {
         unsigned d = square->distance(target);
@@ -45,7 +45,7 @@ public:
     Knight(Player &owner, Board &board, Square *square, King *king)
     : Piece(owner, board, square),
     ChessPiece(owner, board, square, king) {
-        display_char = '\u265E';
+        display_char = L'\u265E';
     }
     bool threatening(Square &target) {
         return square->distance(target) == 5;
@@ -57,7 +57,7 @@ public:
     : Piece(owner, board, square),
     ChessPiece(owner, board, square, king),
     LinearPiece(owner, board, square, 2, 2) {
-        display_char = '\u265D';
+        display_char = L'\u265D';
     }
 };
 class Queen : public ChessPiece, public LinearPiece {
@@ -66,7 +66,7 @@ public:
     : Piece(owner, board, square),
     ChessPiece(owner, board, square, king),
     LinearPiece(owner, board, square, 1, 2) {
-        display_char = '\u265B';
+        display_char = L'\u265B';
     }
 };
 class Pawn : public ChessPiece {
@@ -76,7 +76,7 @@ public:
     Pawn(Player &owner, Board &board, Square *square, King *king)
     : Piece(owner, board, square),
     ChessPiece(owner, board, square, king) {
-        display_char = '\u265E';
+        display_char = L'\u265F';
     }
     bool threatening(Square &target);
     bool can_move_0(Square &target);
