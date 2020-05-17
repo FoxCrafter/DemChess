@@ -4,7 +4,7 @@
 
 Square *Board::get_square(Coors coors) {
     for(unsigned i = 0; i < rules::N_SQUARES; ++i) {
-        if(squares[i]->get_coors() == coors)
+        if(squares[i] != nullptr && squares[i]->get_coors() == coors)
             return squares[i];
     }
     return nullptr;
@@ -12,7 +12,7 @@ Square *Board::get_square(Coors coors) {
 
 Piece *Board::get_piece(Square &square) {
     for(unsigned i = 0; i < rules::N_PIECES; ++i) {
-        if(pieces[i]->get_square() == &square)
+        if(pieces[i] != nullptr && pieces[i]->get_square() == &square)
             return pieces[i];
     }
     return nullptr;
