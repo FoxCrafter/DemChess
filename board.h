@@ -38,6 +38,12 @@ class Board {
     Piece *pieces[rules::N_PIECES];
     Coors min_coors, max_coors;
 public:
+    template<class Func>
+    void for_each_square(Func func) {
+        for(unsigned i = 0; i < n; ++i)
+            if(squares[i] != nullptr)
+                func(*squares[i]);
+    }
     Square *get_square(Coors coors);
     Piece *get_piece(Square &square);
     void remove_piece(Piece *piece);
