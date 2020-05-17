@@ -2,6 +2,7 @@
 #define SQUARE_H
 
 #include "geometry.h"
+#include "color.h"
 
 class Square {
     Coors const coors;
@@ -18,6 +19,7 @@ public:
     unsigned distance(Square const &sq1) const {
         return rel_coors(sq1).distance();
     }
+    Color get_color() const { return color; }
 };
 
 #endif
