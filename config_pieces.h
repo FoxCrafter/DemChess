@@ -91,7 +91,7 @@ public:
                     throw InvalidPieceFlagException();
                 Square *rook_square = rook->get_square();
                 if(square->direction(*rook_square) == dir && board.empty_between(*square, *rook_square)) {
-                    Square *rook_target = board->get_square(square->get_coors() + dir);
+                    Square *rook_target = board.get_square(square->get_coors() + dir);
                     if(rook_target != nullptr) {
                         rook->set_square(rook_target);
                         rook->unset_flags(ROOK_NOT_MOVED);
