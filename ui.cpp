@@ -7,6 +7,60 @@
 
 namespace ui {
 
+UI::Canvas::CanvasCoors::CanvasCoors(Board &board, Coors coors) {
+    Coors min_coors = board.get_min_coors();
+    Coors max_coors = board.get_max_coors();
+    // Y
+    y = 0;
+    unsigned coeff = 1;
+    for(int i = rules::DIMENSIONS - 1; i >= 0; i -= 2) {
+        y += coeff * (coors[i] = min_coors[i]);
+        coeff = coeff * (max_coors[i] - min_coors[i] + 1) + 3;
+    }
+    y += rules::DIMENSIONS / 2 * 2 - 1;
+    // X
+    x = 0;
+    coeff = 1;
+    for(int i = rules::DIMENSIONS - 2; i >= 0; i -= 2) {
+        x += coeff * (coors[i] - min_coors[i]);
+        coeff = coeff * (max_coors[i] - min_coors[i] + 1) + 3;
+    }
+    x += rules::DIMENSIONS / 2 * 2 - 1;
+}
+
+unsigned UI::Canvas::CanvasCoors::screen_y(int offset) {
+    int res = n_rows - 3 - y - offset;
+    if(res < 0 || res >= n_rows - 2)
+        throw std::out_of_range("Outside screen.");
+    return res;
+}
+
+unsigned UI::Canvas::CanvasCoors::screen_x(int offset) {
+    int res = 2 * (x - offset);
+    if(res < 0 || res >= n_cols / 2 * 2)
+        throw std::out_of_range("Outside screen.");
+    return res;
+}
+
+void UI::Canvas::SquareDrawer::operator(Square &square) {
+    CanvasCoors cc(square.get_coors());
+
+}
+
+void UI::Canvas::offset(int ch) {
+    switch(ch) {
+    case KEY_UP   : offset_y -= offset_step; break;
+    case KEY_DOWN : offset_y += offset_step; break;
+    case KEY_LEFT : offset_x -= offset_step; break;
+    case KEY_RIGHT: offset_x += offset_step; break;
+    }
+}
+
+void UI::Canvas::draw() const {
+    Board const &board = (*game)->get_board();
+
+}
+
 unsigned UI::n_rows, UI::n_cols;
 
 static short const COLOR_PAIR_INVALID = 1;
@@ -80,6 +134,7 @@ UI::UI() {
     update_dimensions();
     start_new_game();
     coor_input.init(&game);
+    canvas.init(&game);
 }
 
 void UI::start_new_game() {
@@ -109,6 +164,9 @@ void UI::main_loop() {
                 log_display.set(ex.what());
             }
         }
+        else if(input == KEY_UP || input == KEY_DOWN
+             || input == KEY_LEFT || input == KEY_RIGHT)
+            canvas.offset(input);
         else
             coor_input.char_in(input);
     }

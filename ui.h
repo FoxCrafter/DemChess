@@ -7,6 +7,29 @@ class UI {
     Game *game = nullptr;
     static unsigned n_rows, n_cols;
     void update_dimensions();
+    class Canvas {
+        Game const *const *game;
+        class CanvasCoors {
+            unsigned y, x;
+        public:
+            CanvasCoors(Board &board, Coors coors);
+            unsigned screen_y(unsigned n_rows, int offset);
+            unsigned screen_x(unsigned n_cols, int offset);
+        };
+        class SquareDrawer {
+            Canvas &canvas;
+        public:
+            SquareDrawer(Canvas &canvas) : canvas(canvas) {}
+            void operator()(Square &square);
+        };
+        static unsigned const offset_step = 4;
+        int offset_x = 0;
+        int offset_y = 0;
+    public:
+        void init(Game const *const *game) { this->game = game; }
+        void offset(int ch);
+        void draw() const;
+    } canvas;
     class CoorInput {
         Game const *const *game;
         Coors data;
