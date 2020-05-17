@@ -39,13 +39,14 @@ class Board {
     Coors min_coors, max_coors;
 public:
     template<class Func>
-    void for_each_square(Func func) {
+    void for_each_square(Func func) const {
         for(unsigned i = 0; i < rules::N_SQUARES; ++i)
             if(squares[i] != nullptr)
                 func(*squares[i]);
     }
     Square *get_square(Coors coors);
-    Piece *get_piece(Square &square);
+    Piece *get_piece(Square const &square);
+    Piece const *get_piece(Square const &square) const;
     void remove_piece(Piece *piece);
     void add_piece(Piece *piece);
     bool threatened(Piece &piece) const;

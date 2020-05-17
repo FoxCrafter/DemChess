@@ -10,7 +10,15 @@ Square *Board::get_square(Coors coors) {
     return nullptr;
 }
 
-Piece *Board::get_piece(Square &square) {
+Piece *Board::get_piece(Square const &square) {
+    for(unsigned i = 0; i < rules::N_PIECES; ++i) {
+        if(pieces[i] != nullptr && pieces[i]->get_square() == &square)
+            return pieces[i];
+    }
+    return nullptr;
+}
+
+Piece const *Board::get_piece(Square const &square) const {
     for(unsigned i = 0; i < rules::N_PIECES; ++i) {
         if(pieces[i] != nullptr && pieces[i]->get_square() == &square)
             return pieces[i];
