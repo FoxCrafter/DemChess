@@ -13,16 +13,16 @@ bool LinearPiece::threatening(Square &target) {
 }
 
 void Piece::move_to(Square &target) {
-    board.remove_piece(get_piece(&target));
+    board.remove_piece(board.get_piece(target));
     set_square(&target);
     PieceGroup all_pieces = board.get_pieces_by_flags(0);
     for(unsigned i = 0; i < all_pieces.count(); ++i) {
-        if(all_pieces[i].get_owner() == owner)
-            all_pieces[i].on_owners_move();
-        else if(all_pieces[i].get_owner().get_team() == owner.get_team())
-            all_pieces[i].on_friendly_move();
+        if(all_pieces[i]->get_owner() == owner)
+            all_pieces[i]->on_owners_move();
+        else if(all_pieces[i]->get_owner().get_team() == owner.get_team())
+            all_pieces[i]->on_friendly_move();
         else
-            all_pieces[i].on_enemy_move();
+            all_pieces[i]->on_enemy_move();
     }
     ++move_counter;
 }
