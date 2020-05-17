@@ -1,6 +1,7 @@
 #include "ui.h"
 
 #include <stdexcept>
+#include <cstring>
 
 #include <ncurses.h>
 
