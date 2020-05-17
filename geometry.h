@@ -7,8 +7,8 @@ class RelCoors;
 class Coors {
 protected:
     int coors[rules::DIMENSIONS];
-    Coors() {}
 public:
+    Coors() : coors{0} {}
     Coors(int const *coors);
     int operator[](unsigned i) const { return coors[i]; }
     int &operator[](unsigned i) { return coors[i]; }
@@ -20,6 +20,7 @@ public:
 
 class RelCoors : public Coors {
 public:
+    RelCoors(int const *coors) : Coors(coors) {}
     RelCoors(Coors const &from, Coors const &to);
     unsigned distance() const;
 };
@@ -27,6 +28,7 @@ public:
 class Direction : public RelCoors {
     void unitize();
 public:
+    Direction(int const *coors) : RelCoors(coors) {}
     Direction(Coors const &from, Coors const &to) : RelCoors(from, to) { unitize(); }
     Direction(RelCoors coors) : RelCoors(coors) { unitize(); }
 };
