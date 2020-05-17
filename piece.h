@@ -49,7 +49,7 @@ public:
     Square *get_square() const { return square; }
     Player &get_owner() { return owner; }
     Player const &get_owner() const { return owner; }
-    bool ckeck_flags(int flags) const { return (this->flags & flags) == flags; }
+    bool check_flags(int flags) const { return (this->flags & flags) == flags; }
     void set_flags(int flags) { this->flags |= flags; }
     void unset_flags(int flags) { this->flags &= ~flags; }
     virtual ~Piece() {}
