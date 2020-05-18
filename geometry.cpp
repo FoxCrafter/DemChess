@@ -37,7 +37,7 @@ unsigned RelCoors::distance() const {
     return d;
 }
 
-inline static unsigned abs(int x) {
+inline static int abs(int x) {
     return x > 0 ? x : -x;
 }
 
@@ -47,11 +47,11 @@ void Direction::unitize() {
         if(++i >= rules::DIMENSIONS)
             throw "all zero direction";
     }
-    unsigned gcd = abs(coors[i]);
+    int gcd = abs(coors[i]);
     while(++i < rules::DIMENSIONS) {
         if(coors[i] != 0) {
-            unsigned tmp0 = gcd;
-            unsigned tmp1 = abs(coors[i]);
+            int tmp0 = gcd;
+            int tmp1 = abs(coors[i]);
             while(true) {
                 tmp0 %= tmp1;
                 if(tmp0 == 0) {
