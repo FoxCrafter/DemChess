@@ -30,6 +30,7 @@ class Direction : public RelCoors {
 public:
     Direction(int const *coors) : RelCoors(coors) {}
     Direction(Coors const &from, Coors const &to) : RelCoors(from, to) { unitize(); }
+    Direction(Direction const &dir) : RelCoors(dir) {}
     Direction(RelCoors coors) : RelCoors(coors) { unitize(); }
 };
 
