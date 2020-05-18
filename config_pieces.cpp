@@ -18,7 +18,7 @@ bool ChessPiece::can_move_1(Square &target) {
 }
 
 bool King::can_move_0(Square &target) {
-    if(threatening(target))
+    if(Piece::can_move_0(target))
         return true;
     // CASTLING
     if(!has_moved() && board.threatened(*this)) {
@@ -115,7 +115,7 @@ bool Pawn::can_move_0(Square &target) {
         }
     }
     if(threatening(target)) {
-        if(target_piece != NULL) {
+        if(target_piece != nullptr) {
             return can_take(target_piece);
         }
         else {
