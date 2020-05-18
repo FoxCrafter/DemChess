@@ -34,8 +34,8 @@ typedef Group<Square, rules::N_SQUARES> SquareGroup;
 typedef Group<Piece, rules::N_PIECES> PieceGroup;
 
 class Board {
-    Square *squares[rules::N_SQUARES];
-    Piece *pieces[rules::N_PIECES];
+    Square *squares[rules::N_SQUARES] = {nullptr};
+    Piece *pieces[rules::N_PIECES] = {nullptr};
     Coors min_coors, max_coors;
 public:
     template<class Func>
